@@ -1,0 +1,38 @@
+message Runnable {
+  optional string command = 2; // /bin/cat
+  //process_name=%(program_name)s
+  //numprocs=1
+  optional string directory = 3; // =/tmp
+  optional string umask = 4; //022
+  optional int32 priority = 5; //=999
+  //autostart=true
+  optional bool autorestart = 6; //=true
+  optional uint32 startsecs = 7; //=10
+  optional uint32 startretries = 8; //=3
+  repeated int32 exitcodes = 9; //0,2
+  optional string stopsignal = 10; //=TERM
+  optional uint32 stopwaitsecs = 11; //=10
+  optional string user = 12; // =chrism
+  optional bool redirect_stderr = 13; //=false
+  optional string stdout_logfile = 14; // /a/path
+  optional uint32 stdout_logfile_maxbytes = 15; // 1MB
+  optional uint32 stdout_logfile_backups = 16; // 10
+  optional uint32 stdout_capture_maxbytes = 17; //=1MB
+  optional string stderr_logfile = 18; // /a/path
+  optional uint32 stderr_logfile_maxbytes = 19; //1MB
+  optional uint32 stderr_logfile_backups= 20; //10
+  optional uint32  stderr_capture_maxbytes= 21; //1MB
+  repeated string environment_keys = 22;
+  repeated string environment_values =23;
+   //=A=1,B=2
+  optional string serverurl = 24;// =AUTO
+}
+
+message Task {
+  optional int32 id = 1;
+  optional Runnable runnable = 10;
+}
+
+message Machine {
+  optional string address = 1;
+}
