@@ -36,3 +36,7 @@ message Task {
 message Machine {
   optional string address = 1;
 }
+
+message Job {
+  
+}

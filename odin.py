@@ -23,13 +23,13 @@ import time
 import xmlrpclib
 import zookeeper
 
-logger = logging.getLogger() 
+logger = logging.getLogger()  
 
 ZOO_OPEN_ACL_UNSAFE = {"perms":0x1f, "scheme":"world", "id" :"anyone"};
 
 def path_join(a, b):
     return a + '/' + b
-    
+  
 def path_pop(a):
     return a.split('/').pop()
 
@@ -43,16 +43,16 @@ class Odin():
             /odin/cell/machines/m-??????
         These are ephemeral. If we are creating a node, we will use create
         sequence.
-            
+  
         A job exists in the cell via a node like:
             /odin/cell/jobs/j-?????
         Maybe not ephemeral, but deleted when completed. Create sequence.
-        
+  
         A task that is to be run on a machine is at:
             /odin/cell/tasks/m-????/task-????
         Where m-??? is the machine and the task is sequential. The contents is
         in the job. Any new tasks under there will start a job on the machine.
-    
+  
     '''
     _cell = None
     _cell_default = '/odin/test'
@@ -63,7 +63,7 @@ class Odin():
             self._cell = self._cell_default
         else:
             self._cell = cell
-        
+  
         zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
         self._z = zookeeper.init(zookeeper_servers)
 
@@ -73,7 +73,7 @@ class Odin():
 
     def __del__(self):
         zookeeper.close(self._z)
-        
+  
     def create_machine(self, data, cell=_cell_default):
         if not isinstance(data, odin_pb2.Machine):
             raise TypeError('data must be a protobuffer Machine')
@@ -91,7 +91,7 @@ class Odin():
                          '',
                          [ZOO_OPEN_ACL_UNSAFE])
         return machine
-        
+  
     def register_machine(self, machine, data):
         if not isinstance(data, odin_pb2.Machine):
             raise TypeError('data must be a protobuffer Machine')
@@ -118,12 +118,12 @@ class Odin():
         tasks_dir = '%s/tasks/%s'%(cell, machine_name)
 
         children = zookeeper.get_children(self._z, tasks_dir)
-        
+  
         tasks = list()
         for child_id in children:
             child = '%s/%s'%(tasks_dir, child_id)
             tasks.append(self.get_task(child))
-        
+  
         return tasks
 
     def get_task(self, task):
@@ -139,7 +139,7 @@ class Odin():
         tasks = list()
         for child_id in children:
             tasks.append(child_id)
-        
+  
         return tasks
 
     def add_task_to_machine(self, task, machine):
@@ -188,7 +188,7 @@ class OdinMachine(threading.Thread):
         threading.Thread.__init__(self)
 
         self._machine = machine
-        self._supervisor = xmlrpclib.ServerProxy(supervisor_url) 
+        self._supervisor = xmlrpclib.ServerProxy(supervisor_url)  
         self._supervisor_methods = self._supervisor.system.listMethods()
 
         self.reset_group()
@@ -209,13 +209,13 @@ class OdinMachine(threading.Thread):
 
     def create_process(self, name, config, group = _supervisor_default_group):
         return self._supervisor.twiddler.addProgramToGroup(group, name, config)
-    
+  
     def remove_process(self, name, group = _supervisor_default_group):
         return self._supervisor.supervisor.removeProcessFromGroup(group, name)
-        
+  
     def get_process_info(self, name, group = _supervisor_default_group):
         return self._supervisor.supervisor.getProcessInfo('%s:%s'%(group, name))
-        
+  
     def get_processes(self, group = _supervisor_default_group):
         return self._supervisor.supervisor.getAllProcessInfo()
 
@@ -291,7 +291,7 @@ class OdinMachine(threading.Thread):
         '''
         Watcher for a change in tasks.
         '''
-        
+  
         #line =  (z, type(event), type(state), path)
         #logger.debug(line)
         logger.debug('Task List changed for %s.' % path)

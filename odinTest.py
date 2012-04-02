@@ -51,7 +51,7 @@ class OdinMachineTest(unittest.TestCase):
         	'/odin/test%s'%random.randint(0,9999))
         self.task_1 = odin_pb2.Task()
         self.task_1.id = 2
-    
+
     def test_has_twiddler(self):
     	self.assertTrue(self.machine.has_twiddler())
 
@@ -73,6 +73,6 @@ class OdinMachineTest(unittest.TestCase):
     												  self.machine._machine)
     	task_id = odin.path_pop(task)
     	self.assertEquals(self.task_1, self.machine.get_task(task_id))
-        
+  
 if __name__ == '__main__':
     unittest.main()
