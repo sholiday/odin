@@ -40,3 +40,7 @@ message Machine {
 message Job {
   
 }
+
+message Politician {
+  optional string address = 1;
+}

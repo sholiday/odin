@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='odin.proto',
   package='',
-  serialized_pb='\n\nodin.proto\"\xae\x04\n\x08Runnable\x12\x0f\n\x07\x63ommand\x18\x02 \x01(\t\x12\x11\n\tdirectory\x18\x03 \x01(\t\x12\r\n\x05umask\x18\x04 \x01(\t\x12\x10\n\x08priority\x18\x05 \x01(\x05\x12\x13\n\x0b\x61utorestart\x18\x06 \x01(\x08\x12\x11\n\tstartsecs\x18\x07 \x01(\r\x12\x14\n\x0cstartretries\x18\x08 \x01(\r\x12\x11\n\texitcodes\x18\t \x03(\x05\x12\x12\n\nstopsignal\x18\n \x01(\t\x12\x14\n\x0cstopwaitsecs\x18\x0b \x01(\r\x12\x0c\n\x04user\x18\x0c \x01(\t\x12\x17\n\x0fredirect_stderr\x18\r \x01(\x08\x12\x16\n\x0estdout_logfile\x18\x0e \x01(\t\x12\x1f\n\x17stdout_logfile_maxbytes\x18\x0f \x01(\r\x12\x1e\n\x16stdout_logfile_backups\x18\x10 \x01(\r\x12\x1f\n\x17stdout_capture_maxbytes\x18\x11 \x01(\r\x12\x16\n\x0estderr_logfile\x18\x12 \x01(\t\x12\x1f\n\x17stderr_logfile_maxbytes\x18\x13 \x01(\r\x12\x1e\n\x16stderr_logfile_backups\x18\x14 \x01(\r\x12\x1f\n\x17stderr_capture_maxbytes\x18\x15 \x01(\r\x12\x18\n\x10\x65nvironment_keys\x18\x16 \x03(\t\x12\x1a\n\x12\x65nvironment_values\x18\x17 \x03(\t\x12\x11\n\tserverurl\x18\x18 \x01(\t\"/\n\x04Task\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1b\n\x08runnable\x18\n \x01(\x0b\x32\t.Runnable\"\x1a\n\x07Machine\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\"\x05\n\x03Job')
+  serialized_pb='\n\nodin.proto\"\xae\x04\n\x08Runnable\x12\x0f\n\x07\x63ommand\x18\x02 \x01(\t\x12\x11\n\tdirectory\x18\x03 \x01(\t\x12\r\n\x05umask\x18\x04 \x01(\t\x12\x10\n\x08priority\x18\x05 \x01(\x05\x12\x13\n\x0b\x61utorestart\x18\x06 \x01(\x08\x12\x11\n\tstartsecs\x18\x07 \x01(\r\x12\x14\n\x0cstartretries\x18\x08 \x01(\r\x12\x11\n\texitcodes\x18\t \x03(\x05\x12\x12\n\nstopsignal\x18\n \x01(\t\x12\x14\n\x0cstopwaitsecs\x18\x0b \x01(\r\x12\x0c\n\x04user\x18\x0c \x01(\t\x12\x17\n\x0fredirect_stderr\x18\r \x01(\x08\x12\x16\n\x0estdout_logfile\x18\x0e \x01(\t\x12\x1f\n\x17stdout_logfile_maxbytes\x18\x0f \x01(\r\x12\x1e\n\x16stdout_logfile_backups\x18\x10 \x01(\r\x12\x1f\n\x17stdout_capture_maxbytes\x18\x11 \x01(\r\x12\x16\n\x0estderr_logfile\x18\x12 \x01(\t\x12\x1f\n\x17stderr_logfile_maxbytes\x18\x13 \x01(\r\x12\x1e\n\x16stderr_logfile_backups\x18\x14 \x01(\r\x12\x1f\n\x17stderr_capture_maxbytes\x18\x15 \x01(\r\x12\x18\n\x10\x65nvironment_keys\x18\x16 \x03(\t\x12\x1a\n\x12\x65nvironment_values\x18\x17 \x03(\t\x12\x11\n\tserverurl\x18\x18 \x01(\t\"/\n\x04Task\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1b\n\x08runnable\x18\n \x01(\x0b\x32\t.Runnable\"\x1a\n\x07Machine\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\"\x05\n\x03Job\"\x1d\n\nPolitician\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t')
 
 
 
@@ -281,11 +281,40 @@ _JOB = descriptor.Descriptor(
   serialized_end=657,
 )
 
+
+_POLITICIAN = descriptor.Descriptor(
+  name='Politician',
+  full_name='Politician',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='address', full_name='Politician.address', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=659,
+  serialized_end=688,
+)
+
 _TASK.fields_by_name['runnable'].message_type = _RUNNABLE
 DESCRIPTOR.message_types_by_name['Runnable'] = _RUNNABLE
 DESCRIPTOR.message_types_by_name['Task'] = _TASK
 DESCRIPTOR.message_types_by_name['Machine'] = _MACHINE
 DESCRIPTOR.message_types_by_name['Job'] = _JOB
+DESCRIPTOR.message_types_by_name['Politician'] = _POLITICIAN
 
 class Runnable(message.Message):
   __metaclass__ = reflection.GeneratedProtocolMessageType
@@ -310,5 +339,11 @@ class Job(message.Message):
   DESCRIPTOR = _JOB
   
   # @@protoc_insertion_point(class_scope:Job)
+
+class Politician(message.Message):
+  __metaclass__ = reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _POLITICIAN
+  
+  # @@protoc_insertion_point(class_scope:Politician)
 
 # @@protoc_insertion_point(module_scope)

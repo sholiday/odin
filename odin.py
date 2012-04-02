@@ -16,6 +16,7 @@ import json
 import logging
 import odin_pb2
 import os
+import random
 import signal
 import sys
 import threading
@@ -63,6 +64,8 @@ class Odin():
             self._cell = self._cell_default
         else:
             self._cell = cell
+
+        logger.debug(self._cell)
   
         zookeeper.set_debug_level(zookeeper.LOG_LEVEL_ERROR)
         self._z = zookeeper.init(zookeeper_servers)
@@ -70,13 +73,17 @@ class Odin():
         self._recursivelyCreatePath('%s/machines/'%self._cell)
         self._recursivelyCreatePath('%s/jobs/'%self._cell)
         self._recursivelyCreatePath('%s/tasks/'%self._cell)
+        self._recursivelyCreatePath('%s/politicians/'%self._cell)
 
     def __del__(self):
         zookeeper.close(self._z)
   
-    def create_machine(self, data, cell=_cell_default):
+    def create_machine(self, data, cell = None):
         if not isinstance(data, odin_pb2.Machine):
             raise TypeError('data must be a protobuffer Machine')
+        if cell is None:
+            cell = self._cell
+
         machine = zookeeper.create(self._z,
                                    '%s/machines/m-'%cell,
                                    data.SerializeToString(),
@@ -142,6 +149,35 @@ class Odin():
   
         return tasks
 
+    def get_politicians(self, watcher = None, cell = None):
+        if cell is None:
+            cell = self._cell
+
+        if watcher is None:
+            children = zookeeper.get_children(self._z, '%s/politicians'%(cell))
+        else:
+            children = zookeeper.get_children(self._z, '%s/politicians'%(cell),
+                                              watcher)
+        
+        children = sorted(children)
+        politicians = list()
+        for child in children:
+            politicians.append('%s/politicians/%s'%(cell, child))
+        return sorted(politicians)
+
+    def add_politician(self, data, cell = None):
+        if not isinstance(data, odin_pb2.Politician):
+            raise TypeError('data must be a protobuffer Politician')
+
+        if cell is None:
+            cell = self._cell
+
+        return zookeeper.create(self._z,
+                                '%s/politicians/p-'%(cell),
+                                data.SerializeToString(),
+                                [ZOO_OPEN_ACL_UNSAFE],
+                                zookeeper.SEQUENCE | zookeeper.EPHEMERAL)
+
     def add_task_to_machine(self, task, machine):
         if not isinstance(task, odin_pb2.Task):
             raise TypeError('task must be a protobuffer Task')
@@ -195,7 +231,8 @@ class OdinMachine(threading.Thread):
 
         #rint self._supervisor_methods
         # Create an Odin connection.
-        self._odin = Odin(cell = None)
+        logger.debug(cell)
+        self._odin = Odin(cell = cell)
 
         machine_data = odin_pb2.Machine()
         if self._machine is None:
@@ -299,6 +336,61 @@ class OdinMachine(threading.Thread):
         self.run_tasks(self._odin.watch_tasks(self._machine,
                                               self._tasks_watcher))
 
+class OdinPolitician(threading.Thread):
+    '''
+    A possible scheduler of an Odin cell.
+
+    /odin/cell-name/politicians/p-?????
+    The politician with the lowest id is the leader.
+    '''
+
+    _politician = None
+    _odin = None
+    _is_leader = False
+
+    def __init__(self, cell = None):
+        threading.Thread.__init__(self)
+
+        # Create an Odin connection.
+        self._odin = Odin(cell = cell)
+
+        politician = odin_pb2.Politician()
+
+        self._politician = self._odin.add_politician(politician)
+
+    def check_leadership(self):
+        '''
+        The right way to do this is to watch the previous node, avoids herd
+        problem.
+        '''
+        politicians = self._odin.get_politicians(self._politicians_watcher)
+        if politicians[0] == self._politician:
+            self._is_leader = True
+            logger.info('We are the leader!')
+        else:
+            self._is_leader = False
+            logger.info('We are not the leader :(')
+
+    def _politicians_watcher(self, z, event, state, path):
+        '''
+        Watcher for a change in leaders.
+        '''
+  
+        #line =  (z, type(event), type(state), path)
+        #logger.debug(line)
+        logger.debug('Task List changed for %s.' % path)
+
+        self.check_leadership()
+
+    def run(self):
+        '''
+        Thread runner.
+        '''
+        self.check_leadership()
+
+        while True:
+            time.sleep(10)
+            logger.debug('Heartbeat: _is_leader:%s'%self._is_leader)
 
 def signal_handler(self, signal, frame):
     print 'Kill signal received'
@@ -320,7 +412,15 @@ def main(argv = None):
 
     logger.info('Starting OdinMachine.')
 
-    odin_machine = OdinMachine()
+    cell = '/odin/test%s'%random.randint(0,9999)
+
+    odin_politician = OdinPolitician(cell = cell)
+    odin_politician.start()
+
+    odin_politician2 = OdinPolitician(cell = cell)
+    odin_politician2.start()
+
+    odin_machine = OdinMachine(cell = cell)
     odin_machine.start()
     task_1 = odin_pb2.Task()
     task_1.runnable.command = 'ls'
@@ -329,6 +429,7 @@ def main(argv = None):
                                                        odin_machine._machine)
     logger.debug('Added task %s'%task_name)
     odin_machine.join()
+    odin_politician.join()
     logger.info('Threads joined.')
 
 if __name__ == '__main__':

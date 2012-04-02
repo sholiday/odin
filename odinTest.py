@@ -45,6 +45,12 @@ class OdinTest(unittest.TestCase):
     	task_name = odin.path_pop(task)
     	self.assertEquals(self.task_1, self.odin.get_tasks(machine)[0])
 
+    def test_add_politician(self):
+    	politician = self.odin.add_politician(odin_pb2.Politician())
+    	politicians = self.odin.get_politicians()
+
+    	self.assertIn(politician, politicians)
+
 class OdinMachineTest(unittest.TestCase):
     def setUp(self):
         self.machine = odin.OdinMachine(cell =
