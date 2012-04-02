@@ -21,7 +21,7 @@ message Runnable {
   optional string stderr_logfile = 18; // /a/path
   optional uint32 stderr_logfile_maxbytes = 19; //1MB
   optional uint32 stderr_logfile_backups= 20; //10
-  optional uint32  stderr_capture_maxbytes= 21; //1MB
+  optional uint32 stderr_capture_maxbytes= 21; //1MB
   repeated string environment_keys = 22;
   repeated string environment_values =23;
    //=A=1,B=2

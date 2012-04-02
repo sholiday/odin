@@ -7,6 +7,7 @@ It is a proof of concept at the moment and is terribly inefficient and threaded
 badly.
 
 Built on:
+
  * [ZooKeeper](http://zookeeper.apache.org/)
  * [supervisord](http://supervisord.org)
  * [Protocol Buffers](http://code.google.com/apis/protocolbuffers)
@@ -26,3 +27,13 @@ Built on:
    cluster. A politician schedules jobs on the cluster and accepts Jobs to be
    added to the cluster. Only one politician is in charge, they are the Leader.
    Leaders are elected through a ZooKeeper based algorithm.
+
+
+## Creating Jobs
+ create_job(command = 'cat',
+ 			args = ['--port=%PORT%', '--input=file',],
+ 			data = ['ftp://files/some/file'],
+ 			cell = 'test',
+ 			minimum = 1,
+ 			maximum = 2,
+ 			)
