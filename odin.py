@@ -181,6 +181,7 @@ class OdinMachine(threading.Thread):
     _supervisor_default_group = 'dynamic'
     _supervisor_methods = []
     _tasks = {}
+    _tasks_lock = threading.Lock()
 
     def __init__(self, machine = None, cell = None,
                  supervisor_url = "http://localhost:9001/RPC2"):
@@ -272,6 +273,7 @@ class OdinMachine(threading.Thread):
 
     def run_tasks(self, tasks):
         logger.debug('run_tasks on %s tasks.' % len(tasks))
+        self._tasks_lock.acquire()
         for task_id in tasks:
             if self._tasks.has_key(task_id):
                 logger.debug('Already have task %s.' % task_id)
@@ -282,6 +284,7 @@ class OdinMachine(threading.Thread):
                 config = self.task_to_config(self._tasks[task_id])
                 print config
                 self.create_process(task_id, config)
+        self._tasks_lock.release()
 
     # Private Methods
     def _tasks_watcher(self, z, event, state, path):

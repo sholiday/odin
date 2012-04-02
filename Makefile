@@ -1,5 +1,5 @@
 test: all odin-test
-all: proto
+all: proto odin-machine
 
 odin-test:
 	/usr/local/bin/python -u odinTest.py
