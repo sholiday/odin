@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Odin by sholiday</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Odin</h1>
+        <h2>Run arbitrary programs on your cluster. Built on ZooKeeper</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/sholiday/odin/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/sholiday/odin/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/sholiday/odin" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>Odin</h1>
+
+<p>Odin is a system to run arbitrary programs on your cluster.</p>
+
+<p>Currently there is no scheduler.</p>
+
+<p>It is a proof of concept at the moment and is terribly inefficient and threaded
+badly.</p>
+
+<p>Built on:</p>
+
+<ul>
+<li><a href="http://zookeeper.apache.org/">ZooKeeper</a></li>
+<li><a href="http://supervisord.org">supervisord</a></li>
+<li><a href="http://code.google.com/apis/protocolbuffers">Protocol Buffers</a></li>
+<li><a href="https://github.com/mnaberez/supervisor_twiddler">supervisor_twiddler</a></li>
+</ul><h2>Terms:</h2>
+
+<ul>
+<li>Runnable: a command and configuration to run a program on a single machine
+which will be monitored.</li>
+<li>Task: A single instance of a job. Contains a single runnable, information for 
+where to get program and files.</li>
+<li>Job: A set of tasks (each with multiple instances). A user creates a Job to be
+run somewhere on the cluster.</li>
+<li>Machine: A computer where many tasks will run. Runs a supervisord instance.
+It has an IP.</li>
+<li>Politician (Need a better name): A server that may become the leader of the
+cluster. A politician schedules jobs on the cluster and accepts Jobs to be
+added to the cluster. Only one politician is in charge, they are the Leader.
+Leaders are elected through a ZooKeeper based algorithm.</li>
+</ul><h2>Creating Jobs</h2>
+
+<p>create_job(command = 'cat',
+            args = ['--port=%PORT%', '--input=file',],
+            data = ['ftp://files/some/file'],
+            cell = 'test',
+            minimum = 1,
+            maximum = 2,
+            )</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
