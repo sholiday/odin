@@ -1,5 +1,5 @@
 test: all odin-test
-all: proto odin-machine
+all: odin_pb2.py odin-machine
 
 odin-test:
 	/usr/local/bin/python -u odinTest.py
@@ -7,5 +7,5 @@ odin-test:
 odin-machine:
 	/usr/local/bin/python -u odin.py
 
-proto:
+odin_pb2.py : odin.proto
 	/usr/local/bin/protoc --python_out=. odin.proto
